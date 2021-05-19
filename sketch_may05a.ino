@@ -1,11 +1,4 @@
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
-/*
 
-COMENTARIO:
-
-CARRINHO SEGUIR A LINHA E QUANDO OS DOIS SENSORES MANDAREM UM PULSO CREMALHEIRA ANDA
-
-*/
 #include <AFMotor.h> // MOTOR 
 
 
