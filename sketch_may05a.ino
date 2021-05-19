@@ -140,10 +140,10 @@ void calibrate(){
               
               switch(indore){
                 
-                      case 1: // INDO PARA FRENTE
+                  case 1: // INDO PARA FRENTE
       
                       
-                      // função do movimento do carrinho PARA FRENTE
+                             // função do movimento do carrinho PARA FRENTE
                                   
                              //utiliza a mesma velocidade em ambos os motores
                              left = startSpeed;
@@ -173,45 +173,49 @@ void calibrate(){
                              
                              }
                                      
-                            //Envia os valores de velocidade para os motores
-                            motor.setSpeed(left);
-                            motor.run(FORWARD);
-                            motor1.setSpeed(right);
-                            motor1.run(FORWARD);
-                     
+                              //Envia os valores de velocidade para os motores
+                              motor.setSpeed(left);
+                              motor.run(FORWARD);
+                              motor1.setSpeed(right);
+                              motor1.run(FORWARD);
+                       
+                      
+                              distance = ultrassom.Ranging(CM); // distancia recebe o valor medido em cm
+                                    
+                               // Distancia
+                                    
+                              Serial.print("Distancia: ");
+                              Serial.print(distance);
+                              Serial.println(" cm");
                     
-                            distance = ultrassom.Ranging(CM); // distancia recebe o valor medido em cm
                                   
-                             // Distancia
-                                  
-                            Serial.print("Distancia: ");
-                            Serial.print(distance);
-                            Serial.println(" cm");
-                    
-                                  
-                            while (distance >=10 && distance < 100 ){ // PARAR O CARRINHO
+                              while (distance >=10 && distance < 100 ){ // PARAR O CARRINHO
                                         
                                   motor.run(RELEASE);    
                                   delay(1000); 
                                   distance = ultrassom.Ranging(CM); // distancia recebe o valor medido em cm
                                         
-                            }
+                              }
       
-                            if( (SENSOR1==800 && SENSOR1<1024) && (SENSOR2==800 && SENSOR2<1024) && (SENSOR3==800 && SENSOR3<1024) ){
+                              if( (SENSOR1==800 && SENSOR1<1024) && (SENSOR2==800 && SENSOR2<1024) && (SENSOR3==800 && SENSOR3<1024) ){
       
       
                                       crema.run(FORWARD);
       
                                       delay(5000);
+
+
+                                      crema.run(RELEASE);
+
       
                                       if (distance==0 && distance<5){     // QUANDO A PEÇA DESPEJAR IRÁ ATIVAR ESSE COMANDO
                                   
-                                                   indore == 2; // voltando
+                                                   indore = 2; // voltando
                                   
                                       }
                                       
                               
-                             }
+                               }
 
                       
                       
@@ -219,7 +223,9 @@ void calibrate(){
               
                       case 2: // INDO DE RÉ
                       
-                           //utiliza a mesma velocidade em ambos os motores
+                                  //utiliza a mesma velocidade em ambos os motores
+                                   
+                                   
                                    left = startSpeed;
                                    right = startSpeed;
                                            
@@ -227,10 +233,28 @@ void calibrate(){
                                    SENSOR1 = analogRead(linha1) + leftOffset;
                                    SENSOR2 = analogRead(linha2);
                                    SENSOR3 = analogRead(linha3) + rightOffset;
+
+
+                                    if( (SENSOR1==800 && SENSOR1<1024) && (SENSOR2==800 && SENSOR2<1024) && (SENSOR3==800 && SENSOR3<1024) ){
+
+
+                                       right = 255;
+                                       
+                                       left = right;
+
+                                        
+                                        motor.run(BACKWARD);
+                                        motor1.run(BACKWARD);
+
+                                      
+                                    }
+
                                            
                                    //Se SENSOR1 for maior do que o sensor do centro + limiar,
+                                   
                                    // vire para a direita
-                                   if (SENSOR1 > SENSOR2+threshold){
+                                   
+                                   if (SENSOR1 > (SENSOR2+threshold) ){
                                     
                                           left = startSpeed + rotate;
                                           right = startSpeed - rotate;
@@ -246,6 +270,8 @@ void calibrate(){
                                             right = startSpeed + rotate;
                                    
                                    }
+
+                                   
                                            
                                   //Envia os valores de velocidade para os motores
                                    motor.setSpeed(left);
@@ -253,18 +279,21 @@ void calibrate(){
                                    motor1.setSpeed(right);
                                    motor1.run(BACKWARD);
       
-                                   if(distance1== 0 && distance1<5){
+                                   if(distance1== 0 && distance1<3){
                                     
                                     
-                                        processo == 0;
+                                        processo = 0;
                                     
                                     }
                              
                 
                 } //switchcase
               
-
       } // processo 
+
+
+      motor.run(RELEASE);
+      motor1.run(RELEASE);
       
    } // liga 
 
