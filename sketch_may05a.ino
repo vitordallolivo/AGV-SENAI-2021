@@ -272,7 +272,7 @@ void calibrate(){
                                    motor1.run(BACKWARD);
                                    
                 
-                                   while (distance >=4 && distance < 100 ){ // PARAR O CARRINHO
+                                   while (distance1 >=4 && distance1 < 100 ){ // PARAR O CARRINHO
                                         
                                       motor.run(RELEASE);     
                                       distance = ultrassom.Ranging(CM); // distancia recebe o valor medido em cm
