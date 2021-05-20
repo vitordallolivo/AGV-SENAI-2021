@@ -62,14 +62,14 @@ int liga, processo, usl, ve, vd;
 void calibrate(){
    for (int x=0; x<10; x++) //Executa 10 vezes para obter uma media
    {
-           delay(100);
+       
            SENSOR1 = analogRead(linha1);                                                   // ENTRADAS DOS SENSORES DE LINHA
            SENSOR2 = analogRead(linha2);                                                   // ENTRADAS DOS SENSORES DE LINHA
            SENSOR3 = analogRead(linha3);                                                   // ENTRADAS DOS SENSORES DE LINHA
            leftOffset = leftOffset + SENSOR1;
            centre = centre + SENSOR2;
            rightOffset = rightOffset + SENSOR3;
-           delay(100);
+           
     }
  //obtem a media para cada sensor
          leftOffset = leftOffset /10;
@@ -83,7 +83,6 @@ void calibrate(){
   void setup() {
           
       calibrate();
-      delay(3000);
       pinMode(button,INPUT);
       pinMode(inputPin,INPUT); // pino do PIR
 
@@ -124,7 +123,7 @@ void calibrate(){
 
               distance1 = ultrare.Ranging(CM);
               
-              if( distance1 == 0 && distance<5){
+              if( distance1 == 0 && distance1<5){
                 
                 
                     indore = 1;
@@ -271,7 +270,16 @@ void calibrate(){
                                    motor.run(BACKWARD);
                                    motor1.setSpeed(right);
                                    motor1.run(BACKWARD);
-      
+                                   
+                
+                                   while (distance >=4 && distance < 100 ){ // PARAR O CARRINHO
+                                        
+                                      motor.run(RELEASE);     
+                                      distance = ultrassom.Ranging(CM); // distancia recebe o valor medido em cm
+                                        
+                                   }
+                
+                
                                    if(distance1== 0 && distance1<3){
                                     
                                     
