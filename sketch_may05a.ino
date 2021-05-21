@@ -83,6 +83,7 @@ void calibrate(){
   void setup() {
           
       calibrate();
+      delayMicroseconds(30);
       pinMode(button,INPUT);
       pinMode(inputPin,INPUT); // pino do PIR
 
@@ -97,12 +98,12 @@ void calibrate(){
        motor.run(RELEASE);     // deixar o motor parado  
        motor1.run(RELEASE);   // motor 1 parado     
 
-       Serial.println("inicio");
+       /*Serial.println("inicio"); */
        
       if (digitalRead(button)== 1){
           
           liga = 1;
-          Serial.println("botão");
+         /* Serial.println("botão");*/
           
           
       }
@@ -114,7 +115,7 @@ void calibrate(){
             
                 processo = 1;
           
-          Serial.println("processo"); // DIZ onde estamo no processo
+          /* Serial.println("processo"); // DIZ onde estamo no processo   */
       
           } // processo inicia 
     
@@ -126,7 +127,7 @@ void calibrate(){
               if( distance1 == 0 && distance1<5){
                 
                 
-                    indore = 1;
+                    indore = 1; // INDO PARA FRENTE
                
                 }
               
@@ -175,10 +176,10 @@ void calibrate(){
                               distance = ultrassom.Ranging(CM); // distancia recebe o valor medido em cm
                                     
                                // Distancia
-                                    
+                            /*                                    
                               Serial.print("Distancia: ");
                               Serial.print(distance);
-                              Serial.println(" cm");
+                              Serial.println(" cm");   */ 
                     
                                   
                               while (distance >=10 && distance < 100 ){ // PARAR O CARRINHO
@@ -202,7 +203,9 @@ void calibrate(){
       
                                       if (distance==0 && distance<5){     // QUANDO A PEÇA DESPEJAR IRÁ ATIVAR ESSE COMANDO
                                   
-                                                   indore = 2; // voltando
+                                                   indore = 2;
+                                       
+/////////////////////////////////////////////////////VOLTAR ////////////////////////////////////////////////////////////////////////////////
                                   
                                       }
                                       
@@ -233,8 +236,9 @@ void calibrate(){
                                        right = 255;
                                        
                                        left = right;
-
-                                        
+                                        motor.run(RELEASE);
+                                        motor.run1(RELEASE);
+                                        delayMicroseconds(30);
                                         motor.run(BACKWARD);
                                         motor1.run(BACKWARD);
 
@@ -270,12 +274,12 @@ void calibrate(){
                                    motor.run(BACKWARD);
                                    motor1.setSpeed(right);
                                    motor1.run(BACKWARD);
-                                   
+                                   distance1 = ultrare.Ranging(CM); // distancia recebe o valor medido em cm
                 
                                    while (distance1 >=4 && distance1 < 100 ){ // PARAR O CARRINHO
                                         
                                       motor.run(RELEASE);     
-                                      distance = ultrassom.Ranging(CM); // distancia recebe o valor medido em cm
+                                      distance1 = ultrare.Ranging(CM); // distancia recebe o valor medido em cm
                                         
                                    }
                 
@@ -285,7 +289,7 @@ void calibrate(){
                                     
                                         processo = 0;
                                     
-                                    }
+                                   }
                              
                 
                 } //switchcase
