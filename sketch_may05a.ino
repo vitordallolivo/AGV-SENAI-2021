@@ -12,7 +12,7 @@ Ultrasonic ultrare(40,41); // ULTRASONICO TRASEIRO
 // VARIAVEL MAIS IMPORTANTE
 
 
-int indore=;
+int indore;
 
 
 
