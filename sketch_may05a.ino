@@ -12,7 +12,7 @@ Ultrasonic ultrare(40,41); // ULTRASONICO TRASEIRO
 // VARIAVEL MAIS IMPORTANTE
 
 
-int indore;
+int indore=;
 
 
 
@@ -47,7 +47,7 @@ int SENSOR1,SENSOR2,SENSOR3;
 
 
 AF_DCMotor motor(1,MOTOR12_64KHZ); ///  motor 1
-AF_DCMotor motor1(2,MOTOR12_64KHZ); ///  motor 1
+AF_DCMotor motor1(2,MOTOR12_64KHZ); ///  motor 2
 AF_DCMotor crema(3,MOTOR12_64KHZ);
 
 
@@ -56,7 +56,7 @@ int inputPin = 22; // porta do pir
 int pirState = LOW; // status dizendo que o pir inicia em baixo
 int val=0; // status do pino normalmente igual a ZERO
 
-int liga, processo, usl, ve, vd;
+int liga, processo;
 
 //Rotina de calibracao sensor
 void calibrate(){
@@ -97,17 +97,8 @@ void calibrate(){
   
        motor.run(RELEASE);     // deixar o motor parado  
        motor1.run(RELEASE);   // motor 1 parado     
-
-       /*Serial.println("inicio"); */
        
-      if (digitalRead(button)== 1){
-          
-          liga = 1;
-         /* Serial.println("botão");*/
-          
-          
-      }
-      while (liga ==1) { // Um botão ligado
+ 
         
           val = digitalRead(inputPin);  // LEITURA DO INPUT DO PIR
           
@@ -131,9 +122,9 @@ void calibrate(){
                
                 }
               
-              switch(indore){
+              
                 
-                  case 1: // INDO PARA FRENTE
+               while(indore == 1){ // INDO PARA FRENTE
       
                       
                              // função do movimento do carrinho PARA FRENTE
@@ -149,7 +140,7 @@ void calibrate(){
                                      
                              //Se SENSOR1 for maior do que o sensor do centro + limiar,
                              // vire para a direita
-                             if (SENSOR1 > SENSOR2+threshold){
+                             while (SENSOR1 > SENSOR2+threshold){
                               
                                     left = startSpeed + rotate;
                                     right = startSpeed - rotate;
@@ -159,7 +150,7 @@ void calibrate(){
                                      
                               //Se SENSOR3 for maior do que o sensor do centro + limiar,
                               // vire para a esquerda
-                              if (SENSOR3 > (SENSOR2+threshold)){
+                              while (SENSOR3 > (SENSOR2+threshold)){
                                                 
                                       left = startSpeed - rotate;
                                       right = startSpeed + rotate;
@@ -190,7 +181,7 @@ void calibrate(){
                                         
                               }
       
-                              if( (SENSOR1==800 && SENSOR1<1024) && (SENSOR2==800 && SENSOR2<1024) && (SENSOR3==800 && SENSOR3<1024) ){
+                              if ( (SENSOR1==800 && SENSOR1<1024) && (SENSOR2==800 && SENSOR2<1024) && (SENSOR3==800 && SENSOR3<1024) ){
       
       
                                       crema.run(FORWARD);
@@ -214,9 +205,9 @@ void calibrate(){
 
                       
                       
-
+                      } // INDORE FRENTE 1
               
-                      case 2: // INDO DE RÉ
+                      while( indore == 2){ // INDO DE RÉ
                       
                                   //utiliza a mesma velocidade em ambos os motores
                                    
@@ -237,7 +228,7 @@ void calibrate(){
                                        
                                        left = right;
                                         motor.run(RELEASE);
-                                        motor.run1(RELEASE);
+                                        motor1.run(RELEASE);
                                         delayMicroseconds(30);
                                         motor.run(BACKWARD);
                                         motor1.run(BACKWARD);
@@ -292,7 +283,7 @@ void calibrate(){
                                    }
                              
                 
-                } //switchcase
+                } //indore 2
               
       } // processo 
 
@@ -300,7 +291,7 @@ void calibrate(){
       motor.run(RELEASE);
       motor1.run(RELEASE);
       
-   } // liga 
+   
 
 
 } // loop
