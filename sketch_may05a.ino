@@ -36,9 +36,9 @@ int threshold = 5;
 int left = startSpeed, right = startSpeed;
 
 
-#define linha1 A11
-#define linha2 A12
-#define linha3 A13
+#define linha1 A13
+#define linha2 A14
+#define linha3 A15
 
 
 
@@ -52,7 +52,7 @@ AF_DCMotor crema(3,MOTOR12_64KHZ);
 
 
 
-int inputPin = 22; // porta do pir
+int inputPin = 50; // porta do pir
 int pirState = LOW; // status dizendo que o pir inicia em baixo
 int val=0; // status do pino normalmente igual a ZERO
 
@@ -94,12 +94,12 @@ void calibrate(){
   
   void loop() { 
 
-  
-       motor.run(RELEASE);     // deixar o motor parado  
-       motor1.run(RELEASE);   // motor 1 parado     
+      
+           motor.run(RELEASE);     // deixar o motor parado  
+           motor1.run(RELEASE);   // motor 1 parado     
        
  
-        
+          
           val = digitalRead(inputPin);  // LEITURA DO INPUT DO PIR
           
           if( val == 1 ){ // teste do status do PIR
