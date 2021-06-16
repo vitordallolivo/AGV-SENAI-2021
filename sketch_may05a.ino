@@ -1,9 +1,8 @@
-/*
 
- VERIFICAR O CIRCUITO DO TRAJETO
- O trajeto tem duas linhas horizontais, o arduino precisa pegar apenas uma vez o sinal e pegar após
 
-*/
+// VALOR PARA SENSOR TCRT5000 COMUM acima de  600 é sensor sem detectar nada
+// abaixo de 100 é considerado linha foi percebida
+
 #include <AFMotor.h> // MOTOR 
 
 
@@ -12,12 +11,13 @@ Ultrasonic ultrassom(31,30); // ULTRASONICO FRONTAL
  
 Ultrasonic ultrare(40,41); // ULTRASONICO TRASEIRO
 
+int velocidadenormal=210, velocidadevirada=100;
 
 
-// VARIAVEL MAIS IMPORTANTE
 
 
-int indore;
+int indore=0; // VARIAVEL MAIS IMPORTANTE
+
 
 
 
@@ -27,23 +27,10 @@ int indore;
 
 long distance, distance1; // Variavel da medida da distancia
 
-#define button 23 // botão
 
-//deslocamentos de calibracao
-int leftOffset = 0, rightOffset = 0, centre = 0;
-//pinos para a velocidade e direcao do motor
-int speed1 = 3, speed2 = 11, direction1 = 12, direction2 = 13;
-//velocidade inicial e deslocamento de rotacao
-int startSpeed = 70, rotate = 30;
-//limiar do sensor
-int threshold = 5;
-//velocidades iniciais dos motores esquerdo e direito
-int left = startSpeed, right = startSpeed;
-
-
-#define linha1 A13
+#define linha1 A13 // DIREITA
 #define linha2 A14
-#define linha3 A15
+#define linha3 A15 // ESQUERDA
 
 
 
@@ -55,49 +42,53 @@ AF_DCMotor motor(1,MOTOR12_64KHZ); ///  motor 1
 AF_DCMotor motor1(2,MOTOR12_64KHZ); ///  motor 2
 AF_DCMotor crema(4,MOTOR12_64KHZ);
 
-
-
 int inputPin = 50; // porta do pir
 int pirState = LOW; // status dizendo que o pir inicia em baixo
 int val=0; // status do pino normalmente igual a ZERO
 
 int liga, processo;
 
-//Rotina de calibracao sensor
-void calibrate(){
-   for (int x=0; x<10; x++) //Executa 10 vezes para obter uma media
-   {
-       
-           SENSOR1 = analogRead(linha1);                                                   // ENTRADAS DOS SENSORES DE LINHA
-           SENSOR2 = analogRead(linha2);                                                   // ENTRADAS DOS SENSORES DE LINHA
-           SENSOR3 = analogRead(linha3);                                                   // ENTRADAS DOS SENSORES DE LINHA
-           leftOffset = leftOffset + SENSOR1;
-           centre = centre + SENSOR2;
-           rightOffset = rightOffset + SENSOR3;
-           
-    }
- //obtem a media para cada sensor
-         leftOffset = leftOffset /10;
-         rightOffset = rightOffset /10;
-         centre = centre / 10;
-         //calcula os deslocamentos para os sensores esquerdo e direito
-         leftOffset = centre - leftOffset;
-         rightOffset = centre - rightOffset;
+
+void calibrar(){
+  
+     if(SENSOR1< 500 && SENSOR3>  500) { // virando para esquerda
+     
+            motor.setSpeed(velocidadenormal);
+            motor1.setSpeed(velocidadevirada);
+            delayMicroseconds(50);
+                                        
+                                        
+      }
+      if(SENSOR1> 500 && SENSOR3<500){ // virando a direita
+                                        
+            motor.setSpeed(velocidadevirada);
+            motor1.setSpeed(velocidadenormal);
+            delayMicroseconds(50);
+                                        
+      }
+      if (SENSOR1> 500 && SENSOR3> 500){
+                                        
+            motor.setSpeed(velocidadenormal);
+            motor1.setSpeed(velocidadenormal);
+                                        
+      }
+
 }
+  
+  
 
-  void setup() {
-          
-      calibrate();
-      delayMicroseconds(30);
-      pinMode(button,INPUT);
+
+
+void setup() {
+    
       pinMode(inputPin,INPUT); // pino do PIR
-
+      crema.setSpeed(100);
 
       Serial.begin(9600);
       
   }
   
-  void loop() { 
+void loop() { 
 
       
            motor.run(RELEASE);     // deixar o motor parado  
@@ -122,8 +113,12 @@ void calibrate(){
               /*Primeiro é preciso ligar o botão para depois ligar o processo com um sinal do PIR*/    
     
                   distance1 = ultrare.Ranging(CM);
+                  distance = ultrassom.Ranging(CM);
+                  SENSOR1 = analogRead(linha1);
+                  SENSOR2 = analogRead(linha2);
+                  SENSOR3 = analogRead(linha3);
                   
-                  if( distance1 == 0 && distance1<5){
+                  if( (SENSOR1 < 500) &&( SENSOR2< 500) &&(SENSOR3 < 500) ){
                     
                     
                         indore = 1; // INDO PARA FRENTE
@@ -134,163 +129,83 @@ void calibrate(){
                     
                    while(indore == 1){ // INDO PARA FRENTE
           
-                          
-                                 // função do movimento do carrinho PARA FRENTE
-                                      
-                                 //utiliza a mesma velocidade em ambos os motores
-                                 left = startSpeed;
-                                 right = startSpeed;
-                                         
+                                 crema.run(RELEASE);
+                                 motor.run(FORWARD);
+                                 motor1.run(FORWARD);
+
+                                       
                                  //le os sensores e adiciona os deslocamentos
-                                 SENSOR1 = analogRead(linha1) + leftOffset;
+                                 SENSOR1 = analogRead(linha1);
                                  SENSOR2 = analogRead(linha2);
-                                 SENSOR3 = analogRead(linha3) + rightOffset;
-                                         
-                                 //Se SENSOR1 for maior do que o sensor do centro + limiar,
-                                 // vire para a direita
-                           /*      while (SENSOR1 > SENSOR2+threshold){
-                                  
-                                        left = startSpeed + rotate;
-                                        right = startSpeed - rotate;
-                                        
-                                        delayMicroseconds(50);
-                                        liga = 1 ;   
-                                  }
-                                         
-                                  //Se SENSOR3 for maior do que o sensor do centro + limiar,
-                                  // vire para a esquerda
-                                  while (SENSOR3 > (SENSOR2+threshold)){
-                                                    
-                                          left = startSpeed - rotate;
-                                          right = startSpeed + rotate;
-                                          delayMicroseconds(50);
-                                          liga=1;
-                                 }
-                                       */  
-                                  //Envia os valores de velocidade para os motores
-                                  motor.setSpeed(left);
-                                  motor.run(FORWARD);
-                                  motor1.setSpeed(right);
-                                  motor1.run(FORWARD);
+                                 SENSOR3 = analogRead(linha3);
+                                                                      
                            
                           
-                                  distance = ultrassom.Ranging(CM); // distancia recebe o valor medido em cm
+                                 distance = ultrassom.Ranging(CM); // distancia recebe o valor medido em cm
                                         
                                    // Distancia
-                                /*                                    
+                                                                    
                                   Serial.print("Distancia: ");
                                   Serial.print(distance);
-                                  Serial.println(" cm");   */ 
-                        
-                                      
-                                  while (distance >=10 && distance < 100 ){ // PARAR O CARRINHO
+                                  Serial.println(" cm");   
+                                  calibrar();
+                                  while((SENSOR1<500) && (SENSOR2<500) && (SENSOR3<500)){
+
+                                        motor.run(RELEASE);
+                                        motor1.run(RELEASE);
+                                        crema.run(FORWARD);
+                                        delay(1500);
+                                        motor.run(BACKWARD);
+                                        motor1.run(BACKWARD);
+                                        indore = 2;
+                                    
+                                    
+                                    
+                                    }
+                                    
+                                  while (distance >=10 && distance < 100 && indore == 1){ // PARAR O CARRINHO
                                             
-                                      motor.run(RELEASE);    
+                                      motor.run(RELEASE);  
+                                      motor1.run(RELEASE);
                                       delayMicroseconds(50); 
                                       distance = ultrassom.Ranging(CM); // distancia recebe o valor medido em cm
                                             
                                   }
-                                  
-                             /*     while ( (SENSOR1>700) && (SENSOR2>700)&& (SENSOR3>700) && (liga == 1 ) || (distance1>30)){
-          
-                                          delayMicroseconds(50);
-                                          crema.run(FORWARD);
-                                          
-                                          delay(5000);
-    
-    
-                                          crema.run(RELEASE);
-    */
-          
-                                          if (distance==0 && distance<5){     // QUANDO A PEÇA DESPEJAR IRÁ ATIVAR ESSE COMANDO
-                                      
-                                                       indore = 2;
                                            
-    /////////////////////////////////////////////////////VOLTAR ////////////////////////////////////////////////////////////////////////////////
-                                      
-                                          }
+   
                                           
                                   
-                                   }
+                           } // indore = 1  
     
                           
-                          
-                          } // INDORE FRENTE 1
-                  
+/////////////////////////////////////////////////////VOLTAR ////////////////////////////////////////////////////////////////////////////////
+                                      
+                                            
                           while( indore == 2){ // INDO DE RÉ
-                          
-                                      //utiliza a mesma velocidade em ambos os motores
-                              /*         
-                                       
-                                       left = startSpeed;
-                                       right = startSpeed;
-                                               
-                                       //le os sensores e adiciona os deslocamentos
-                                       SENSOR1 = analogRead(linha1) + leftOffset;
-                                       SENSOR2 = analogRead(linha2);
-                                       SENSOR3 = analogRead(linha3) + rightOffset;
-    
-    
-                                        if ( (SENSOR1==800 && SENSOR1<1024) && (SENSOR2==800 && SENSOR2<1024) && (SENSOR3==800 && SENSOR3<1024) && (liga == 1 ) ){
-    
-                                           liga = 0;
-                                           right = 255;
-                                           
-                                           left = right;
-                                            motor.run(RELEASE);
-                                            motor1.run(RELEASE);
-                                            delayMicroseconds(30);
-                                            motor.run(BACKWARD);
-                                            motor1.run(BACKWARD);
-    
-                                          
-                                        }
-    
-                                               
-                                       //Se SENSOR1 for maior do que o sensor do centro + limiar,
-                                       
-                                       // vire para a direita
-                                       
-                                       if (SENSOR1 > (SENSOR2+threshold) ){
-                                        
-                                              left = startSpeed + rotate;
-                                              right = startSpeed - rotate;
-                                              
-                                                
-                                        }
-                                               
-                                        //Se SENSOR3 for maior do que o sensor do centro + limiar,
-                                        // vire para a esquerda
-                                        if (SENSOR3 > (SENSOR2+threshold)){
-                                                          
-                                                left = startSpeed - rotate;
-                                                right = startSpeed + rotate;
-                                       
-                                       }
-    
-                                       */
-                                               
-                                      //Envia os valores de velocidade para os motores
-                                       motor.setSpeed(left);
-                                       motor.run(BACKWARD);
-                                       motor1.setSpeed(right);
-                                       motor1.run(BACKWARD);
-                                       distance1 = ultrare.Ranging(CM); // distancia recebe o valor medido em cm
+
+                                      
+                                      calibrar();
+                                     
+                                      distance1 = ultrare.Ranging(CM); // distancia recebe o valor medido em cm
                     
                                        while (distance1 >=4 && distance1 < 100 ){ // PARAR O CARRINHO
                                             
-                                          motor.run(RELEASE);     
+                                          motor.run(RELEASE);
+                                          motor1.run(RELEASE);     
                                           distance1 = ultrare.Ranging(CM); // distancia recebe o valor medido em cm
                                             
                                        }
                     
                     
-                                       if(distance1== 0 && distance1<3){
-                                        
-                                        
+                                       if((SENSOR1<500) && (SENSOR2<500) && (SENSOR3<500)){
+                                            
+                                            motor.run(RELEASE);
+                                            motor1.run(RELEASE);
                                             processo = 0;
                                         
                                        }
+                                       
+                                      
                                  
                     
                     } //indore 2
