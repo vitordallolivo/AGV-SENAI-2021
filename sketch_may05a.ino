@@ -148,7 +148,7 @@ void calibrate(){
                                          
                                  //Se SENSOR1 for maior do que o sensor do centro + limiar,
                                  // vire para a direita
-                                 while (SENSOR1 > SENSOR2+threshold){
+                           /*      while (SENSOR1 > SENSOR2+threshold){
                                   
                                         left = startSpeed + rotate;
                                         right = startSpeed - rotate;
@@ -166,7 +166,7 @@ void calibrate(){
                                           delayMicroseconds(50);
                                           liga=1;
                                  }
-                                         
+                                       */  
                                   //Envia os valores de velocidade para os motores
                                   motor.setSpeed(left);
                                   motor.run(FORWARD);
@@ -191,7 +191,7 @@ void calibrate(){
                                             
                                   }
                                   
-                                  while ( (SENSOR1>700) && (SENSOR2>700)&& (SENSOR3>700) && (liga == 1 ) || (distance1>30)){
+                             /*     while ( (SENSOR1>700) && (SENSOR2>700)&& (SENSOR3>700) && (liga == 1 ) || (distance1>30)){
           
                                           delayMicroseconds(50);
                                           crema.run(FORWARD);
@@ -200,7 +200,7 @@ void calibrate(){
     
     
                                           crema.run(RELEASE);
-    
+    */
           
                                           if (distance==0 && distance<5){     // QUANDO A PEÇA DESPEJAR IRÁ ATIVAR ESSE COMANDO
                                       
@@ -220,7 +220,7 @@ void calibrate(){
                           while( indore == 2){ // INDO DE RÉ
                           
                                       //utiliza a mesma velocidade em ambos os motores
-                                       
+                              /*         
                                        
                                        left = startSpeed;
                                        right = startSpeed;
@@ -268,7 +268,7 @@ void calibrate(){
                                        
                                        }
     
-                                       
+                                       */
                                                
                                       //Envia os valores de velocidade para os motores
                                        motor.setSpeed(left);
