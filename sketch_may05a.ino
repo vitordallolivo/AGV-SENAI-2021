@@ -53,7 +53,7 @@ int SENSOR1,SENSOR2,SENSOR3;
 
 AF_DCMotor motor(1,MOTOR12_64KHZ); ///  motor 1
 AF_DCMotor motor1(2,MOTOR12_64KHZ); ///  motor 2
-AF_DCMotor crema(3,MOTOR12_64KHZ);
+AF_DCMotor crema(4,MOTOR12_64KHZ);
 
 
 
