@@ -42,8 +42,7 @@ AF_DCMotor motor(1,MOTOR12_64KHZ); ///  motor 1
 AF_DCMotor motor1(2,MOTOR12_64KHZ); ///  motor 2
 AF_DCMotor crema(4,MOTOR12_64KHZ);
 
-int inputPin = 47; // porta do pir
-int pirState = LOW; // status dizendo que o pir inicia em baixo
+#define pirState 47// porta do pir
 int val=0; // status do pino normalmente igual a ZERO
 
 int liga, processo;
@@ -87,7 +86,7 @@ void calibrar(){
 
 void setup() {
     
-      pinMode(inputPin,INPUT); // pino do PIR
+      pinMode(pirState,INPUT); // pino do PIR
       crema.setSpeed(100);
       Serial.begin(9600);
       
@@ -95,7 +94,7 @@ void setup() {
   
 void loop() { 
          
-         val == digitalRead(pirState);
+         
          Serial.println(distance1);
          
          motor.run(RELEASE);     // deixar o motor parado  
@@ -104,7 +103,7 @@ void loop() {
  
           
           
-      /*   val = digitalRead(inputPin);  // LEITURA DO INPUT DO PIR
+         val = digitalRead(pirState);  // LEITURA DO INPUT DO PIR
          
                         
                         
@@ -113,7 +112,7 @@ void loop() {
                 
                     processo = 1;
               
-              /* Serial.println("processo"); // DIZ onde estamo no processo   
+                     Serial.println("processo"); // DIZ onde estamo no processo   
           
               } // processo inicia 
         
@@ -222,7 +221,7 @@ void loop() {
                     
                     } //indore 2
                   
-          /*}*/// processo 
+          }// processo 
 
 
       motor.run(RELEASE);
