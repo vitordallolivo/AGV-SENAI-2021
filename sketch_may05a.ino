@@ -79,7 +79,7 @@ void calibrar(){
 
 void setup() {
     
-      pinMode(infra,INPUT_PULLUP); // pino do PIR
+      pinMode(infra,INPUT); // pino do PIR
       crema.setSpeed(100);
       Serial.begin(9600);
       
