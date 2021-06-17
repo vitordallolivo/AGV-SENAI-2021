@@ -33,8 +33,6 @@ long distance, distance1; // Variavel da medida da distancia
 #define linha3 A15 // ESQUERDA
 
 
-
-
 int SENSOR1,SENSOR2,SENSOR3;
 
 
@@ -42,7 +40,8 @@ AF_DCMotor motor(1,MOTOR12_64KHZ); ///  motor 1
 AF_DCMotor motor1(2,MOTOR12_64KHZ); ///  motor 2
 AF_DCMotor crema(4,MOTOR12_64KHZ);
 
-#define pirState 47// porta do pir
+#define infra 47// porta do pir
+
 int val=0; // status do pino normalmente igual a ZERO
 
 int liga, processo;
@@ -54,13 +53,7 @@ void calibrar(){
      
             motor.setSpeed(velocidadenormal);
             motor1.setSpeed(velocidadevirada);
-            Serial.println(SENSOR1);
-            Serial.print("1");
-            Serial.println(SENSOR2);
-            Serial.print("2");
-            Serial.println(SENSOR3);
-            Serial.print("3");
-            delayMicroseconds(50);
+           delayMicroseconds(50);
                                         
                                         
       }
@@ -86,29 +79,29 @@ void calibrar(){
 
 void setup() {
     
-      pinMode(pirState,INPUT); // pino do PIR
+      pinMode(infra,INPUT_PULLUP); // pino do PIR
       crema.setSpeed(100);
       Serial.begin(9600);
+      
       
   }
   
 void loop() { 
          
          
-         Serial.println(distance1);
-         
+         Serial.println(infra);
          motor.run(RELEASE);     // deixar o motor parado  
          motor1.run(RELEASE);   // motor 1 parado     
        
  
           
           
-         val = digitalRead(pirState);  // LEITURA DO INPUT DO PIR
+         val = digitalRead(infra);  // LEITURA DO INPUT DO PIR
          
                         
                         
          
-              if( val == 1 ){ // teste do status do PIR
+              if( val == 0 ){ // teste do status do PIR
                 
                     processo = 1;
               
