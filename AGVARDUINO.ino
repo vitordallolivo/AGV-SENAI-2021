@@ -5,18 +5,12 @@
 
 
 #include <Ultrasonic.h>
-Ultrasonic ultrassom(29,37); // ULTRASONICO FRONTAL trig e echo
- 
-Ultrasonic ultrare(42,30); // ULTRASONICO TRASEIRO
+Ultrasonic ultrassom(29,37); // ULTRASONICO FRONTAL trig e echo 
 
 int velocidadenormal=100, velocidadevirada=20;
 
 
-
-
 int indore=0; // VARIAVEL MAIS IMPORTANTE
-
-
 
 
 // IR OU VOLTAR, A VARIAVEL
@@ -44,28 +38,27 @@ int val=0; // status do pino normalmente igual a ZERO
 
 int liga, processo;
 
-
 void calibrar(){
   
-     if(SENSOR1< 100 && SENSOR3>  500) { // virando para esquerda
+     if( SENSOR3> 600 && SENSOR1< 600   ) { // virando para esquerda
      
-            motor.setSpeed(velocidadenormal);
-            motor1.setSpeed(velocidadevirada);
-           delayMicroseconds(50);
+            motor.setSpeed(100);
+            motor1.setSpeed(0);
+            delayMicroseconds(50);
                                         
                                         
       }
-      if(SENSOR1> 500 && SENSOR3<100){ // virando a direita
+      if( SENSOR1 > 600  &&  SENSOR3 < 600 ){ // virando a direita
                                         
-            motor.setSpeed(velocidadevirada);
-            motor1.setSpeed(velocidadenormal);
+            motor.setSpeed(0);
+            motor1.setSpeed(100);
             delayMicroseconds(50);
                                         
       }
-      if (SENSOR1> 500 && SENSOR3> 500){
+      if ( SENSOR2< 600){ // continua
                                         
-            motor.setSpeed(velocidadenormal);
-            motor1.setSpeed(velocidadenormal);
+            motor.setSpeed(100);
+            motor1.setSpeed(100);
                                         
       }
 
@@ -86,14 +79,11 @@ void setup() {
 void loop() { 
          
          
-         Serial.println(digitalRead(infra));
-         motor.run(RELEASE);     // deixar o motor parado  
-         motor1.run(RELEASE);   // motor 1 parado     
-       
- 
-          
-          
-         val = digitalRead(infra);  // LEITURA DO INPUT DO PIR
+              Serial.println(digitalRead(infra));
+              motor.run(RELEASE);     // deixar o motor parado  
+              motor1.run(RELEASE);   // motor 1 parado     
+
+              val = digitalRead(infra);  // LEITURA DO INPUT DO PIR
          
                         
                         
@@ -102,32 +92,25 @@ void loop() {
                 
                     processo = 1;
               
-                     Serial.println("processo"); // DIZ onde estamo no processo   
+                     
           
               } // processo inicia 
-        
-              while (processo == 1){ // processo é para o carrinho iniciar como um todo
-              /*Primeiro é preciso ligar o botão para depois ligar o processo com um sinal do PIR*/    
-    
-                  distance1 = ultrare.Ranging(CM);
-                  distance = ultrassom.Ranging(CM);
-                  SENSOR1 = analogRead(linha1);
-                  SENSOR2 = analogRead(linha2);
-                  SENSOR3 = analogRead(linha3);
-                  
-                  while( (SENSOR1 < 500) &&( SENSOR2< 500) &&(SENSOR3 < 500) ){
+              while (processo == 1) {
+
+                    if( (SENSOR1 < 600 ) &&(SENSOR2 < 600) &&(SENSOR3 < 600) ){
                     
-                    
-                        indore = 1; // INDO PARA FRENTE
-                        motor.run(255);
-                        motor1.run(255);
-                        Serial.println(SENSOR1);
-                    }
-                  
+                            motor.run(FORWARD);
+                            motor1.run(FORWARD);
+                            indore=1;
+                            processo=0;
+                             Serial.println("processo");   
+                      }                
+               }
                   switch (indore){
                     
                      case 1:// INDO PARA FRENTE
-            
+                                   
+                                   Serial.println("frente");
                                    crema.run(RELEASE);
                                    motor.run(FORWARD);
                                    motor1.run(FORWARD);
@@ -149,12 +132,13 @@ void loop() {
                                     Serial.println(" cm");   
                                     
                                     calibrar();
+
                                     
-                                    while((SENSOR1<500) && (SENSOR2<500) && (SENSOR3<500)){
-  
+                                    if((SENSOR1 < 600) && (SENSOR2 < 600) && (SENSOR3< 600)){
+                                          
                                           motor.run(RELEASE);
                                           motor1.run(RELEASE);
-                                          crema.run(FORWARD);
+                                          crema.run(RELEASE);
                                           delay(3000);
                                           motor.run(BACKWARD);
                                           motor1.run(BACKWARD);
@@ -182,26 +166,15 @@ void loop() {
   /////////////////////////////////////////////////////VOLTAR ////////////////////////////////////////////////////////////////////////////////
                                         
                                               
-                            case 2: // INDO DE RÉ
+                            case 3: // INDO DE RÉ
   
-                                        
+                                        Serial.println("indore2");
                                         calibrar(); // calibração do sensores de linha
                                         
                                         crema.run(RELEASE);
                                         motor.run(BACKWARD);
                                         motor1.run(BACKWARD); 
                                         
-                                        distance1 = ultrare.Ranging(CM); // distancia recebe o valor medido em cm
-                                      
-                                         while (distance1 >=4 && distance1 < 100 ){ // PARAR O CARRINHO
-                                              
-                                            motor.run(RELEASE);
-                                            motor1.run(RELEASE);     
-                                            distance1 = ultrare.Ranging(CM); // distancia recebe o valor medido em cm
-                                              
-                                         }
-                      
-                      
                                          if((SENSOR1<500) && (SENSOR2<500) && (SENSOR3<500)){
                                               
                                               motor.run(RELEASE);
@@ -215,8 +188,7 @@ void loop() {
                     
                     } //indore 
                     
-          }// processo 
-
+          
 
       motor.run(RELEASE);
       motor1.run(RELEASE);
