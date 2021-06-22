@@ -77,36 +77,9 @@ void setup() {
   }
   
 void loop() { 
-         
-         
-              Serial.println(digitalRead(infra));
-              motor.run(RELEASE);     // deixar o motor parado  
-              motor1.run(RELEASE);   // motor 1 parado     
 
-              val = digitalRead(infra);  // LEITURA DO INPUT DO PIR
-         
-                        
-                        
-         
-              if( val == 0 ){ // teste do status do PIR
-                
-                    processo = 1;
-              
-                     
-          
-              } // processo inicia 
-              while (processo == 1) {
 
-                    if( (SENSOR1 < 600 ) &&(SENSOR2 < 600) &&(SENSOR3 < 600) ){
-                    
-                            motor.run(FORWARD);
-                            motor1.run(FORWARD);
-                            indore=1;
-                            processo=0;
-                             Serial.println("processo");   
-                      }                
-               }
-                  switch (indore){
+      switch (indore){
                     
                      case 1:// INDO PARA FRENTE
                                    
@@ -183,7 +156,39 @@ void loop() {
                                           
                                          }
                                        
-                                      
+                             default:
+                             
+                                Serial.println(digitalRead(infra));
+                                motor.run(RELEASE);     // deixar o motor parado  
+                                motor1.run(RELEASE);   // motor 1 parado     
+
+                                val = digitalRead(infra);  // LEITURA DO INPUT DO PIR
+         
+                        
+                        
+         
+                                 if( val == 0 ){ // teste do status do PIR
+                
+                                        processo = 1;
+              
+                     
+          
+                                   } // processo inicia 
+                                   
+                                while (processo == 1) {
+                                     Serial.println("processo ==1");
+                                     if( (SENSOR1 < 600 ) &&(SENSOR2 < 600) &&(SENSOR3 < 600) ){
+                                  
+                                          motor.run(FORWARD);
+                                          motor1.run(FORWARD);
+                                          indore=1;
+                                          delayMicroseconds(10);
+                                          processo=0;
+                                          Serial.println("processo");   
+                                    }                
+                               }
+                                  
+                             
                                  
                     
                     } //indore 
