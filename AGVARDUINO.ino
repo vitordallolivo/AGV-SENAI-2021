@@ -45,8 +45,7 @@ void calibrar(){
             motor.setSpeed(100);
             motor1.setSpeed(0);
             delayMicroseconds(50);
-                                        
-                                        
+                                          
       }
       if( SENSOR1 > 600  &&  SENSOR3 < 600 ){ // virando a direita
                                         
@@ -156,36 +155,36 @@ void loop() {
                                           
                                          }
                                        
-                             default:
+                             default: // condição normal
                              
                                 Serial.println(digitalRead(infra));
                                 if (val =! 0){
                                   
                                   motor.run(RELEASE);     // deixar o motor parado  
-                                
                                   motor1.run(RELEASE);   // motor 1 parado     
+                                
                                 }
+                                
                                 val = digitalRead(infra);  // LEITURA DO INPUT DO PIR
          
-                                 if( val == 0 ){ // teste do status do PIR
+                                if( val == 0 ){ // teste do status do PIR
                 
                                         processo = 1;
               
                      
           
-                                   } // processo inicia 
-                                   
-                                   if (processo == 1) {
-                                     Serial.println(SENSOR2);
-                                     
-                                     if( (SENSOR1 < 600 ) &&(SENSOR2 < 600) &&(SENSOR3 < 600) ){
+                                 } // processo inicia 
+                                                                     
+                                 if (processo == 1) {
+
+                                     while ( (SENSOR1 < 600 ) &&(SENSOR2 < 600) &&(SENSOR3 < 600) ){
                                   
                                           motor.run(FORWARD);
                                           motor1.run(FORWARD);
                                           indore=1;
-                                          delayMicroseconds(1000);
+                                          delayMicroseconds(10);
                                           processo=0;
-                                          Serial.println("processo");   
+                                          Serial.println(SENSOR1);   
                                     }                
                                }
                                   
