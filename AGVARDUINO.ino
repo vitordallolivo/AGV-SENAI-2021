@@ -15,7 +15,7 @@ int indore=0; // VARIAVEL MAIS IMPORTANTE
 
 // IR OU VOLTAR, A VARIAVEL
 
-
+#define led 40
 
 long distance, distance1; // Variavel da medida da distancia
 
@@ -70,6 +70,7 @@ void calibrar(){
 void setup() {
     
       pinMode(infra,INPUT); // pino do PIR
+      pinMode(led,OUTPUT);
       crema.setSpeed(100);
       Serial.begin(9600);
       
@@ -77,8 +78,7 @@ void setup() {
   }
   
 void loop() { 
-
-
+      digitalWrite(led,HIGH);
       switch (indore){
                     
                      case 1:// INDO PARA FRENTE
@@ -107,7 +107,7 @@ void loop() {
                                     calibrar();
 
                                     
-                                    if((SENSOR1 < 600) && (SENSOR2 < 600) && (SENSOR3< 600)){
+                                    if((SENSOR1 < 100) && (SENSOR2 < 100) && (SENSOR3< 100)){
                                           
                                           motor.run(RELEASE);
                                           motor1.run(RELEASE);
@@ -117,7 +117,7 @@ void loop() {
                                           motor1.run(BACKWARD);
                                           indore = 2;
                                           crema.run(RELEASE);
-                                      
+                                          Serial.println("esteira");
                                       
                                       }
                                       
@@ -139,7 +139,7 @@ void loop() {
   /////////////////////////////////////////////////////VOLTAR ////////////////////////////////////////////////////////////////////////////////
                                         
                                               
-                            case 3: // INDO DE RÉ
+                            case 2: // INDO DE RÉ
   
                                         Serial.println("indore2");
                                         calibrar(); // calibração do sensores de linha
@@ -152,20 +152,20 @@ void loop() {
                                               
                                               motor.run(RELEASE);
                                               motor1.run(RELEASE);
-                                              processo = 0;
+                                              indore = 3;
                                           
                                          }
                                        
                              default:
                              
                                 Serial.println(digitalRead(infra));
-                                motor.run(RELEASE);     // deixar o motor parado  
-                                motor1.run(RELEASE);   // motor 1 parado     
-
+                                if (val =! 0){
+                                  
+                                  motor.run(RELEASE);     // deixar o motor parado  
+                                
+                                  motor1.run(RELEASE);   // motor 1 parado     
+                                }
                                 val = digitalRead(infra);  // LEITURA DO INPUT DO PIR
-         
-                        
-                        
          
                                  if( val == 0 ){ // teste do status do PIR
                 
@@ -175,14 +175,15 @@ void loop() {
           
                                    } // processo inicia 
                                    
-                                while (processo == 1) {
-                                     Serial.println("processo ==1");
+                                   if (processo == 1) {
+                                     Serial.println(SENSOR2);
+                                     
                                      if( (SENSOR1 < 600 ) &&(SENSOR2 < 600) &&(SENSOR3 < 600) ){
                                   
                                           motor.run(FORWARD);
                                           motor1.run(FORWARD);
                                           indore=1;
-                                          delayMicroseconds(10);
+                                          delayMicroseconds(1000);
                                           processo=0;
                                           Serial.println("processo");   
                                     }                
@@ -191,12 +192,11 @@ void loop() {
                              
                                  
                     
-                    } //indore 
+         } //indore 
                     
           
 
-      motor.run(RELEASE);
-      motor1.run(RELEASE);
+   
       
    
 
