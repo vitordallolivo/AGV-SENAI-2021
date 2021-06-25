@@ -20,9 +20,9 @@ int indore=0; // VARIAVEL MAIS IMPORTANTE
 long distance, distance1; // Variavel da medida da distancia
 
 
-#define linha1 A15 // ESQUERDA
+#define linha1 A15 // direita
 #define linha2 A14
-#define linha3 A13 // DIREITA
+#define linha3 A11 // esquerda
 
 
 int SENSOR1,SENSOR2,SENSOR3;
@@ -34,7 +34,7 @@ AF_DCMotor crema(4,MOTOR12_64KHZ);
 
 #define infra 47// porta do pir
 
-int val=0; // status do pino normalmente igual a ZERO
+int val; // status do pino normalmente igual a ZERO
 
 int liga, processo;
 
@@ -42,15 +42,15 @@ void calibrar(){
   
      if( SENSOR3> 600 && SENSOR1< 600   ) { // virando para esquerda
      
-            motor.setSpeed(100);
-            motor1.setSpeed(0);
+            motor.setSpeed(0);
+            motor1.setSpeed(100);
             delayMicroseconds(50);
                                           
       }
       if( SENSOR1 > 600  &&  SENSOR3 < 600 ){ // virando a direita
                                         
-            motor.setSpeed(0);
-            motor1.setSpeed(100);
+            motor.setSpeed(100);
+            motor1.setSpeed(0);
             delayMicroseconds(50);
                                         
       }
@@ -63,8 +63,6 @@ void calibrar(){
 
 } // calibrar
   
- 
-
 
 void setup() {
     
@@ -79,14 +77,46 @@ void setup() {
 void loop() { 
       digitalWrite(led,HIGH);
       switch (indore){
-                    
+                    default: // condição normal
+                             
+                          Serial.println(digitalRead(infra));
+                          if (val =! 0){
+                                  
+                              motor.run(RELEASE);     // deixar o motor parado  
+                              motor1.run(RELEASE);   // motor 1 parado     
+                                
+                          }
+                                
+                          val = digitalRead(infra);  // LEITURA DO INPUT DO PIR
+         
+                          if( val == 0 ){ // teste do status do PIR
+                
+                                processo = 1;
+               
+                     
+          
+                             } // processo inicia 
+                                                                     
+                           if (processo == 1) {
+
+                               if ( (SENSOR1 >600 ) &&(SENSOR2 >600) &&(SENSOR3 >600) ){
+                                  
+                                    motor.run(FORWARD);
+                                    motor1.run(FORWARD);
+                                    indore=1;
+                                    delayMicroseconds(10);
+                                    processo=0;
+                                    Serial.println(SENSOR1);   
+                                }                
+                            }
+                               
                      case 1:// INDO PARA FRENTE
                                    
                                    Serial.println("frente");
                                    crema.run(RELEASE);
                                    motor.run(FORWARD);
                                    motor1.run(FORWARD);
-  
+                                   calibrar();
                                          
                                    //le os sensores e adiciona os deslocamentos
                                    SENSOR1 = analogRead(linha1);
@@ -103,10 +133,9 @@ void loop() {
                                     Serial.print(distance);
                                     Serial.println(" cm");   
                                     
-                                    calibrar();
 
                                     
-                                    if((SENSOR1 < 100) && (SENSOR2 < 100) && (SENSOR3< 100)){
+                                    if((SENSOR1 >600) && (SENSOR2 >600) && (SENSOR3>600)){
                                           
                                           motor.run(RELEASE);
                                           motor1.run(RELEASE);
@@ -155,38 +184,7 @@ void loop() {
                                           
                                          }
                                        
-                             default: // condição normal
                              
-                                Serial.println(digitalRead(infra));
-                                if (val =! 0){
-                                  
-                                  motor.run(RELEASE);     // deixar o motor parado  
-                                  motor1.run(RELEASE);   // motor 1 parado     
-                                
-                                }
-                                
-                                val = digitalRead(infra);  // LEITURA DO INPUT DO PIR
-         
-                                if( val == 0 ){ // teste do status do PIR
-                
-                                        processo = 1;
-              
-                     
-          
-                                 } // processo inicia 
-                                                                     
-                                 if (processo == 1) {
-
-                                     while ( (SENSOR1 < 600 ) &&(SENSOR2 < 600) &&(SENSOR3 < 600) ){
-                                  
-                                          motor.run(FORWARD);
-                                          motor1.run(FORWARD);
-                                          indore=1;
-                                          delayMicroseconds(10);
-                                          processo=0;
-                                          Serial.println(SENSOR1);   
-                                    }                
-                               }
                                   
                              
                                  
