@@ -42,16 +42,16 @@ void calibrar(){
   
      if( SENSOR3> 600 && SENSOR1< 600   ) { // virando para esquerda
      
-            motor.setSpeed(0);
-            motor1.setSpeed(100);
-            delayMicroseconds(50);
+            motor.setSpeed(100);
+            motor1.setSpeed(0);
+            delayMicroseconds(0);
                                           
       }
       if( SENSOR1 > 600  &&  SENSOR3 < 600 ){ // virando a direita
                                         
-            motor.setSpeed(100);
-            motor1.setSpeed(0);
-            delayMicroseconds(50);
+            motor.setSpeed(0);
+            motor1.setSpeed(100);
+            delayMicroseconds(0);
                                         
       }
       if ( SENSOR2< 600){ // continua
@@ -75,121 +75,108 @@ void setup() {
   }
   
 void loop() { 
-      digitalWrite(led,HIGH);
-      switch (indore){
-                    default: // condição normal
-                             
-                          Serial.println(digitalRead(infra));
-                          if (val =! 0){
-                                  
-                              motor.run(RELEASE);     // deixar o motor parado  
-                              motor1.run(RELEASE);   // motor 1 parado     
-                                
-                          }
-                                
-                          val = digitalRead(infra);  // LEITURA DO INPUT DO PIR
-         
-                          if( val == 0 ){ // teste do status do PIR
-                
-                                processo = 1;
-               
-                     
-          
-                             } // processo inicia 
-                                                                     
-                           if (processo == 1) {
 
-                               if ( (SENSOR1 >600 ) &&(SENSOR2 >600) &&(SENSOR3 >600) ){
-                                  
-                                    motor.run(FORWARD);
-                                    motor1.run(FORWARD);
-                                    indore=1;
-                                    delayMicroseconds(10);
-                                    processo=0;
-                                    Serial.println(SENSOR1);   
-                                }                
-                            }
-                               
-                     case 1:// INDO PARA FRENTE
+      while(indore == 1){// INDO PARA FRENTE
                                    
-                                   Serial.println("frente");
-                                   crema.run(RELEASE);
-                                   motor.run(FORWARD);
-                                   motor1.run(FORWARD);
-                                   calibrar();
+            Serial.println("frente");
+            crema.run(RELEASE);
+            motor.run(FORWARD);
+            motor1.run(FORWARD);
+            calibrar();
                                          
-                                   //le os sensores e adiciona os deslocamentos
-                                   SENSOR1 = analogRead(linha1);
-                                   SENSOR2 = analogRead(linha2);
-                                   SENSOR3 = analogRead(linha3);
+            //le os sensores e adiciona os deslocamentos
+            SENSOR1 = analogRead(linha1);
+            SENSOR2 = analogRead(linha2);
+            SENSOR3 = analogRead(linha3);
                                                                         
                              
                             
-                                   distance = ultrassom.Ranging(CM); // distancia recebe o valor medido em cm
+            distance = ultrassom.Ranging(CM); // distancia recebe o valor medido em cm
                                           
-                                     // Distancia
+            // Distancia
                                                                       
-                                    Serial.print("Distancia: ");
-                                    Serial.print(distance);
-                                    Serial.println(" cm");   
+            Serial.print("Distancia: ");
+            Serial.print(distance);
+            Serial.println(" cm");   
                                     
-
-                                    
-                                    if((SENSOR1 >600) && (SENSOR2 >600) && (SENSOR3>600)){
+            if((SENSOR1 >600) && (SENSOR2 >600) && (SENSOR3>600)){
                                           
-                                          motor.run(RELEASE);
-                                          motor1.run(RELEASE);
-                                          crema.run(RELEASE);
-                                          delay(3000);
-                                          motor.run(BACKWARD);
-                                          motor1.run(BACKWARD);
-                                          indore = 2;
-                                          crema.run(RELEASE);
-                                          Serial.println("esteira");
+                  motor.run(RELEASE);
+                  motor1.run(RELEASE);
+                  crema.run(RELEASE);
+                  delay(3000);
+                  motor.run(BACKWARD);
+                  motor1.run(BACKWARD);
+                  indore = 2;
+                  crema.run(RELEASE);
+                  Serial.println("esteira");
+                                          
                                       
-                                      }
-                                      
-                                    while (distance >=10 && distance < 100 && indore == 1){ // PARAR O CARRINHO
+             }
+                                     
+             while (distance >=10 && distance < 100 && indore == 1){ // PARAR O CARRINHO
                                               
-                                        motor.run(RELEASE);  
-                                        motor1.run(RELEASE);
-                                        delayMicroseconds(50); 
-                                        distance = ultrassom.Ranging(CM); // distancia recebe o valor medido em cm
+                     motor.run(RELEASE);  
+                     motor1.run(RELEASE);
+                     delayMicroseconds(50); 
+                     distance = ultrassom.Ranging(CM); // distancia recebe o valor medido em cm 
                                               
-                                    }
+             }
                                              
      
                                             
-                                    
+      }        
                               // indore = 1  
       
                      
   /////////////////////////////////////////////////////VOLTAR ////////////////////////////////////////////////////////////////////////////////
                                         
                                               
-                            case 2: // INDO DE RÉ
-  
-                                        Serial.println("indore2");
-                                        calibrar(); // calibração do sensores de linha
+     while(indore == 2){ // INDO DE RÉ
+                           
+           SENSOR1 = analogRead(linha1);
+           SENSOR2 = analogRead(linha2);
+           SENSOR3 = analogRead(linha3);
+           Serial.println("indore2");
+           calibrar(); // calibração do sensores de linha
                                         
-                                        crema.run(RELEASE);
-                                        motor.run(BACKWARD);
-                                        motor1.run(BACKWARD); 
+           crema.run(RELEASE);
+           motor.run(BACKWARD);
+           motor1.run(BACKWARD); 
                                         
-                                         if((SENSOR1<500) && (SENSOR2<500) && (SENSOR3<500)){
+           if((SENSOR1>600) && (SENSOR2>600) && (SENSOR3>600)){
                                               
-                                              motor.run(RELEASE);
-                                              motor1.run(RELEASE);
-                                              indore = 3;
+                   motor.run(RELEASE);
+                   motor1.run(RELEASE);
+                   indore = 3;
                                           
-                                         }
-                                       
+            }
+     }
                              
-                                  
                              
-                                 
-                    
-         } //indore 
+                                     
+      while (indore =! 1 && indore =! 2){
+                              
+                             
+           Serial.println(digitalRead(infra));
+           SENSOR1 = analogRead(linha1);
+           SENSOR2 = analogRead(linha2);
+           SENSOR3 = analogRead(linha3);  
+                                    
+           val = digitalRead(infra);  // LEITURA DO INPUT DO PIR
+                   
+           if (val == 0 ){
+                                            
+                  motor.run(FORWARD);
+                  motor1.run(FORWARD);
+                  indore=1;
+                  delay(100);
+                  processo=0;
+                  Serial.println(SENSOR1);   
+           }                
+       }     
+                                            
+                           
                     
           
 
