@@ -10,7 +10,7 @@ Ultrasonic ultrassom(29,37); // ULTRASONICO FRONTAL trig e echo
 int velocidadenormal=100, velocidadevirada=20;
 
 
-int indore=0; // VARIAVEL MAIS IMPORTANTE
+int indore; // VARIAVEL MAIS IMPORTANTE
 
 
 // IR OU VOLTAR, A VARIAVEL
