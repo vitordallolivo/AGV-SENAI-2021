@@ -6,6 +6,7 @@
 
 #include <Ultrasonic.h>
 Ultrasonic ultrassom(29,37); // ULTRASONICO FRONTAL trig e echo 
+Ultrasonic ultrare(43,41); // TRIG E ECHO
 
 int velocidadenormal=100, velocidadevirada=20;
 
@@ -94,11 +95,12 @@ void loop() {
             distance = ultrassom.Ranging(CM); // distancia recebe o valor medido em cm
                                           
             // Distancia
-                                                                      
+           /*                                                           
             Serial.print("Distancia: ");
             Serial.print(distance);
             Serial.println(" cm");   
-                                    
+           */  
+                                  
             if((SENSOR1 >600) && (SENSOR2 >600) && (SENSOR3>600)){
                                           
                   motor.run(RELEASE);
@@ -139,6 +141,8 @@ void loop() {
            SENSOR3 = analogRead(linha3);
            Serial.println("indore2");
            calibrar(); // calibração do sensores de linha
+
+           distance1 = ultrare.Ranging(CM); // distancia recebe o valor medido em cm
                                         
            crema.run(RELEASE);
            motor.run(BACKWARD);
@@ -151,6 +155,13 @@ void loop() {
                    indore = 3;
                                           
             }
+           while (distance1>=0 && distance1=<10){ // distancia da parte traseira
+
+                  motor.run(RELEASE); // motor da direita 
+                  motor1.run(RELEASE);// motor da esquerda
+            
+           }
+           
      }
                              
                              
