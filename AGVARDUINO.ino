@@ -3,13 +3,9 @@
 
 #include <AFMotor.h> // MOTOR 
 
-
 #include <Ultrasonic.h>
 Ultrasonic ultrassom(29,37); // ULTRASONICO FRONTAL trig e echo 
 Ultrasonic ultrare(43,41); // TRIG E ECHO
-
-int velocidadenormal=100, velocidadevirada=20;
-
 
 int indore; // VARIAVEL MAIS IMPORTANTE
 
@@ -26,7 +22,16 @@ long distance, distance1; // Variavel da medida da distancia
 #define linha3 A11 // esquerda
 
 
-int SENSOR1,SENSOR2,SENSOR3;
+int SENSOR1,SENSOR2,SENSOR3; 
+/*
+ * 
+ * SENSOR1 --> DIREITA FRENTE E ESQUERDA ATRÁS
+ * 
+ * SENSOR2 --> CENTRO
+ * 
+ * SENSOR3 --> ESQUERDA FRENTE E DIREITA ATRÁS
+ * 
+*/
 
 
 AF_DCMotor motor(1,MOTOR12_64KHZ); ///  motor 1
@@ -48,6 +53,23 @@ void calibrar(){
             delayMicroseconds(0);
                                           
       }
+
+      if (SENSOR1 > 600 && SENSOR2>600){ // direita-centro FRENTE
+        
+            motor1.setSpeed(60);
+            motor.setSpeed(100);
+        
+        }
+
+      if (SENSOR2> 600 && SENSOR3> 600){ // esquerda-centro FRENTE
+        
+           motor1.setSpeed(100);
+           motor.setSpeed(60);
+        
+        
+        
+        }  
+      
       if( SENSOR1 > 600  &&  SENSOR3 < 600 ){ // virando a direita
                                         
             motor.setSpeed(0);
@@ -55,7 +77,7 @@ void calibrar(){
             delayMicroseconds(0);
                                         
       }
-      if ( SENSOR2< 600){ // continua
+      if ( SENSOR2 > 600){ // continua
                                         
             motor.setSpeed(100);
             motor1.setSpeed(100);
@@ -63,13 +85,62 @@ void calibrar(){
       }
 
 } // calibrar
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   
+void calibrar1(){ // o sinal de quando está indo de maneira reversa é oposto a de maneira normal
+
+     // esquerda foi revertida com a direita
+  
+     if( SENSOR3> 600 && SENSOR1< 600   ) { //  virando a esquerda
+     
+            motor.setSpeed(0);
+            motor1.setSpeed(100);
+            delayMicroseconds(0);
+                                          
+      }
+      if( SENSOR1 > 600  &&  SENSOR3 < 600 ){ // virando a direita 
+                                        
+            motor.setSpeed(100);
+            motor1.setSpeed(0);
+            delayMicroseconds(0);
+                                        
+      }
+      if ( SENSOR2 > 600){ // continua
+                                        
+            motor.setSpeed(100);
+            motor1.setSpeed(100);
+                                        
+      }
+
+
+      if (SENSOR1 > 600 && SENSOR2>600){ // esquerda-centro RÉ
+        
+            motor1.setSpeed(100);
+            motor.setSpeed(60);
+        
+        }
+
+      if (SENSOR2> 600 && SENSOR3> 600){ // direita-centro RÉ
+        
+           motor1.setSpeed(60);
+           motor.setSpeed(100);
+        
+        
+        
+        }
+
+} // calibrar
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void setup() {
     
       pinMode(infra,INPUT); // pino do PIR
       pinMode(led,OUTPUT);
-      crema.setSpeed(100);
+      crema.setSpeed(150);
       Serial.begin(9600);
       
       
@@ -134,13 +205,13 @@ void loop() {
   /////////////////////////////////////////////////////VOLTAR ////////////////////////////////////////////////////////////////////////////////
                                         
                                               
-     while(indore == 2){ // INDO DE RÉ
+      while(indore == 2){ // Condição de andar de ré
                            
            SENSOR1 = analogRead(linha1);
            SENSOR2 = analogRead(linha2);
            SENSOR3 = analogRead(linha3);
            Serial.println("indore2");
-           calibrar(); // calibração do sensores de linha
+           calibrar1(); // calibração do sensores de linha
 
            distance1 = ultrare.Ranging(CM); // distancia recebe o valor medido em cm
                                         
@@ -159,14 +230,12 @@ void loop() {
 
                   motor.run(RELEASE); // motor da direita 
                   motor1.run(RELEASE);// motor da esquerda
-            
+                  delayMicroseconds(10);
            }
            
-     }
-                             
-                             
-                                     
-      while (indore =! 1 && indore =! 2){
+      }
+                              
+      while (indore =! 1 && indore =! 2){ // Condição de inicio
                               
                              
            Serial.println(digitalRead(infra));
@@ -181,19 +250,10 @@ void loop() {
                   motor.run(FORWARD);
                   motor1.run(FORWARD);
                   indore=1;
-                  delay(100);
-                  processo=0;
+                  delay(500);
                   Serial.println(SENSOR1);   
-           }                
-       }     
-                                            
-                           
-                    
-          
-
-   
+           }
       
-   
-
-
+      }     
+                                            
 } // loop
