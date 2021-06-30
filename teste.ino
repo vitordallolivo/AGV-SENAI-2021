@@ -47,74 +47,66 @@ void setup() {
   // put your setup code here, to run once:
      pinMode(infra,INPUT); // pino do PIR
      pinMode(led,OUTPUT);
-     crema.setSpeed(150);
      Serial.begin(9600);
-     motor.setSpeed(100);
-     motor1.setSpeed(100);
-     crema.setSpeed(50);
+     motor.setSpeed(200);
+     motor1.setSpeed(220);
+     crema.setSpeed(200);
+     digitalWrite(led,LOW);
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-        Serial.println(SENSOR2);
+     Serial.println(SENSOR1);
+
+     crema.run(RELEASE);
      
-        SENSOR1 = analogRead(linha1);
-        SENSOR2 = analogRead(linha2);
-        SENSOR3 = analogRead(linha3);
-        motor.run(RELEASE);
-        motor1.run(RELEASE);
+     SENSOR1 = analogRead(linha1);
+     SENSOR2 = analogRead(linha2);
+     SENSOR3 = analogRead(linha3);
+     motor.run(FORWARD);
+     motor1.run(FORWARD);
         
-        if (SENSOR2>600){
+        
+       
+      if ( SENSOR2 > 600){ // continua
+           motor.run(FORWARD);
+           motor1.run(FORWARD);                            
+            
+      }
+      
+      if ( SENSOR1> 600 && SENSOR2<600){ // SENSOR 1 É JUNTO AO M1 (MOTOR NORMAL NÃO O MOTOR 1)
+        
+        
+         motor.run(FORWARD);
+         motor1.run(BACKWARD);  
+            
+            
+        }                                  
+      
+      if ( SENSOR3> 600 && SENSOR2<600){ // SENSOR3 É JUNTO AO M2, MOTOR1
+        
+            motor.run(BACKWARD);
+            motor1.run(FORWARD);
+            
+        
+        }  
+     
+      
+    
+      if (SENSOR1>600 && SENSOR2>600 && SENSOR3>600){
+
+            delayMicroseconds(30);
+            motor.run(RELEASE);
+            motor.setSpeed(0);
+            motor1.run(RELEASE);
+            motor1.setSpeed(0);
+            crema.run(FORWARD);
+            delay(3000);
+            crema.run(RELEASE);
+        
+      }
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-          motor.run(FORWARD);
-          motor1.run(FORWARD);
-        }
 
 }
