@@ -80,7 +80,8 @@ void loop() {
     SENSOR2 = analogRead(linha2);
     SENSOR3 = analogRead(linha3);
 
-    Serial.println(SENSOR3);
+    // Serial.println(SENSOR3);
+    
     if  (SENSOR2 > 600 && SENSOR1 < 600 && SENSOR3 < 600) {
       motor1.run(FORWARD);
       motor.run(FORWARD);
@@ -90,26 +91,27 @@ void loop() {
 
     }
 
+
     if (SENSOR3 < 600 && SENSOR1 > 600) { // SAIU PELA ESQUERDA
-      motor.setSpeed(150);
+      motor.setSpeed(120);
       motor1.setSpeed(40);
     }
     if (SENSOR1 < 600 && SENSOR3 > 600) {
 
       motor.setSpeed(40);
-      motor1.setSpeed(150);
+      motor1.setSpeed(120);
 
     }
     if (SENSOR2 > 600 && SENSOR3 < 600 && SENSOR1 > 600) {
 
-      motor.setSpeed(150);
+      motor.setSpeed(130);
       motor1.setSpeed(90);
 
 
     }
     if (SENSOR3 > 600 && SENSOR2 < 600 && SENSOR1 > 600) {
 
-      motor.setSpeed(150);
+      motor.setSpeed(130);
       motor1.setSpeed(90);
 
 
