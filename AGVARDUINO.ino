@@ -60,7 +60,7 @@ void loop() {
 
   if (val == 0) {
 
-    indore = 1 ;
+    indore = 1 ; // indo para frente
 
     motor1.run(FORWARD);
     motor.run(FORWARD);
@@ -81,7 +81,8 @@ void loop() {
     SENSOR3 = analogRead(linha3);
 
 
-    if ( SENSOR1 > 600 && SENSOR2 > 600 && SENSOR3 > 600 )
+
+    if ( SENSOR1 > 600 && SENSOR2 > 600 && SENSOR3 > 600 ) // todos os sensores detectaram a linha
     {
 
       motor.run(RELEASE);
@@ -107,22 +108,22 @@ void loop() {
 
   }
 
-  while (indore == 2) {
+  while (indore == 2) { // indo para trás
     SENSOR1 = analogRead(linha1);
     SENSOR2 = analogRead(linha2);
     SENSOR3 = analogRead(linha3);
     motor1.run(BACKWARD);
     motor.run(BACKWARD);
     motor.setSpeed(70);
-    motor1.setSpeed(90);
-  
-    if ( SENSOR1 > 600 && SENSOR2 > 600 && SENSOR3 > 600 )
+    motor1.setSpeed(80);
+
+    if ( SENSOR1 > 600 && SENSOR2 > 600 && SENSOR3 > 600 ) // chegou no inicio novamente
     {
-       motor1.run(FORWARD);
-    motor.run(FORWARD);
-    motor.setSpeed(70);
-    motor1.setSpeed(90);
-      delay(300);
+      motor1.run(FORWARD);
+      motor.run(FORWARD);
+      motor.setSpeed(70);
+      motor1.setSpeed(80);
+      delay(1000);
       motor.run(RELEASE);
       motor.setSpeed(0);
       motor1.setSpeed(0);
