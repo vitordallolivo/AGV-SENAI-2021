@@ -1,8 +1,4 @@
-// VALOR PARA SENSOR TCRT5000 COMUM acima de  600 é sensor sem detectar nada
-// abaixo de 100 é considerado linha foi percebida
-
 #include <AFMotor.h> // MOTOR 
-
 #include <Ultrasonic.h>
 
 void andarFrente();
@@ -13,28 +9,16 @@ void velocidadeMotor(int,int,int,int);
 Ultrasonic ultrassom(29, 37); // ULTRASONICO FRONTAL trig e echo
 Ultrasonic ultrare(43, 41); // TRIG E ECHO
 
-int indore = 0; // VARIAVEL MAIS IMPORTANTE
-
-
 long distance, distance1; // Variavel da medida da distancia
-
 
 #define linha1 A15 // direita
 #define linha2 A14
 #define linha3 A11 // esquerda
 
-
 int sensorDireita, sensorCentro, sensorEsquerda;
-/*
-
-   sensorDireita --> DIREITA FRENTE E ESQUERDA ATRÁS
-
+/* sensorDireita --> DIREITA FRENTE E ESQUERDA ATRÁS
    sensorCentro --> CENTRO
-
-   sensorEsquerda --> ESQUERDA FRENTE E DIREITA ATRÁS
-
-*/
-
+   sensorEsquerda --> ESQUERDA FRENTE E DIREITA ATRÁS */
 
 AF_DCMotor motorE(1, MOTOR12_64KHZ); ///  motorE 1  M1 e sensor 3 pegar m2 acelera
 AF_DCMotor motorD(2, MOTOR12_64KHZ); ///  motorD 2 M2
@@ -64,13 +48,7 @@ void velocidadeMotor(int speedMD,int speedME, int runMD,int runME){
 
 
 void loop() {
-  //Serial.println(sensorDireita);
-  val = digitalRead(infra);  // LEITURA DO INPUT DO infra
-
-  if (val == 0) {
-
-    indore = 1; // indo para frente
-
+  if (digitalRead(infra) == 0) { // LEITURA DO INPUT DO infra
     velocidadeMotor(90,70,FORWARD,FORWARD);
     delay(1000);
     andarFrente();
@@ -86,34 +64,27 @@ void andarFrente(){
     sensorCentro = analogRead(linha2);
     sensorEsquerda = analogRead(linha3);
 
-    // Serial.println(sensorEsquerda);
     if  (sensorCentro > 600 && sensorDireita < 600 && sensorEsquerda < 600) {
-      speedMotor(90,70);
+      velocidadeMotor(90,70,FORWARD,FORWARD);
       continue;
     }
-
     if (sensorCentro > 600 && sensorEsquerda < 600 && sensorDireita > 600) {
-      speedMotor(100,130);
+      velocidadeMotor(70,130,FORWARD,BACKWARD);
       continue;
     }
-
     if (sensorCentro > 600 && sensorEsquerda > 600 && sensorDireita < 600) {
-      speedMotor(150,80);
+      velocidadeMotor(150,70,BACKWARD,FORWARD);
       continue;
     }
-
-    // SAIU PELA ESQUERDA
-    if (sensorEsquerda < 600 && sensorDireita > 600) { 
-      speedMotor(60,120);
+    if (sensorEsquerda < 600 && sensorDireita > 600) { // SAIU PELA ESQUERDA
+      velocidadeMotor(60,120,FORWARD,BACKWARD);
       continue;
     }
     if (sensorDireita < 600 && sensorEsquerda > 600) {
-      speedMotor(140,40);
+      velocidadeMotor(140,40,BACKWARD,FORWARD);
       continue;
     }
-
-    // todos os sensores detectaram a linha    
-    if ( sensorDireita > 600 && sensorCentro > 600 && sensorEsquerda > 600 ) {
+    if ( sensorDireita > 600 && sensorCentro > 600 && sensorEsquerda > 600 ) { // todos os sensores detectaram a linha
       velocidadeMotor(0,0,RELEASE,RELEASE);
 
       crema.run(FORWARD);
@@ -136,32 +107,28 @@ void andarTras(){
     sensorDireita = analogRead(linha1);
     sensorCentro = analogRead(linha2);
     sensorEsquerda = analogRead(linha3);
-    // motorD.run(BACKWARD);
-    // motorE.run(BACKWARD);
-    // motorE.setSpeed(70);
-    // motorD.setSpeed(80);
     
     if  (sensorCentro > 600 && sensorDireita < 600 && sensorEsquerda < 600) {
-      speedMotor(90,70);
+      velocidadeMotor(90,70,BACKWARD,BACKWARD);
       continue;
     }
 
     if (sensorCentro > 600 && sensorEsquerda < 600 && sensorDireita > 600) {
-      speedMotor(150,70);
+      velocidadeMotor(150,70,BACKWARD,FORWARD);
       continue;
     }
 
     if (sensorCentro > 600 && sensorEsquerda > 600 && sensorDireita < 600) {
-      speedMotor(90,130);
+      velocidadeMotor(90,130,FORWARD,BACKWARD);
       continue;
     }
 
     if (sensorEsquerda < 600 && sensorDireita > 600) { 
-      speedMotor(150,40);
+      velocidadeMotor(150,40,BACKWARD,FORWARD);
       continue;
     }
     if (sensorDireita < 600 && sensorEsquerda > 600) {
-      speedMotor(60,130);
+      velocidadeMotor(60,130,FORWARD,BACKWARD);
       continue;
     }
 
