@@ -38,7 +38,6 @@ AF_DCMotor crema(4, MOTOR12_64KHZ);
 
 int val; // status do pino normalmente igual a ZERO
 
-int liga;
 
 void setup() {
 
