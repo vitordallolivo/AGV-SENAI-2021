@@ -51,9 +51,7 @@ void setup() {
 void loop() {
 
   //Serial.println(SENSOR1);
-  SENSOR1 = analogRead(linha1);
-  SENSOR2 = analogRead(linha2);
-  SENSOR3 = analogRead(linha3);
+
 
   val = digitalRead(infra);  // LEITURA DO INPUT DO PIR
 
@@ -71,10 +69,6 @@ void loop() {
 
   while (indore == 1) {
 
-    motor1.run(FORWARD);
-    motor.run(FORWARD);
-    motor.setSpeed(70);
-    motor1.setSpeed(90);
     SENSOR1 = analogRead(linha1);
     SENSOR2 = analogRead(linha2);
     SENSOR3 = analogRead(linha3);
@@ -82,6 +76,7 @@ void loop() {
     // Serial.println(SENSOR3);
     
     if  (SENSOR2 > 600 && SENSOR1 < 600 && SENSOR3 < 600) {
+      
       motor1.run(FORWARD);
       motor.run(FORWARD);
       motor.setSpeed(70);
